@@ -115,6 +115,31 @@
     };
   };
 
+  function Explosion() {
+    var that = this;
+
+    this.htmlElement = document.createElement('div');
+
+    this.x = 0;
+    this.y = 0;
+
+    this.init = function (x, y) {
+      that.x = x;
+      that.y = y;
+      that.htmlElement.className = "explosion";
+      that.htmlElement.style.left = that.x + 'px';
+      that.htmlElement.style.top = that.y + 'px';
+      animateTileSprite(that.htmlElement, 31, 15);
+    };
+    this.clearExplosion = function () {
+      setTimeout(clearAll, 500);
+    };
+
+    var clearAll = function () {
+      that.htmlElement.remove();
+    }
+  };
+
   function animateTileSprite(element, noOfTiles, intervalTime) {
     var currentSpriteX = 0;
     var currentSpriteY = 0;
@@ -131,13 +156,17 @@
 
 
   function GameWorld(){
+
     var that = this;
+
     this.htmlElement = document.getElementById('main-screen');
     this.homeScreen = document.getElementById('home-screen');
     this.startButton = document.getElementById('start-game');
     this.loadingScreen = document.getElementById('loading-screen');
     this.gameScreen = document.getElementById('game-screen');
+
     this.blocks = [];
+    this.explosions = [];
     this.bomb;
     this.bomberMan;
     this.mainGameLooper;
@@ -206,8 +235,63 @@
 
       var explodeBomb = function () {
         that.bomb.htmlElement.remove();
-        // createExplosionBoxes(that.bomb.x, that.bomb.y);
+        createExplosionBoxes(that.bomb.x, that.bomb.y);
         that.bomb.bombActive = false;
+      };
+
+      var createExplosionBoxes = function (x, y) {
+        var rightX = x + 50;
+        var rightY = y + 0;
+        var botX = x + 0;
+        var botY = y + 50;
+        var leftX = x - 50;
+        var leftY = y + 0;
+        var topX = x + 0;
+        var topY = y - 50;
+        var midX = x + 0;
+        var midY = y + 0;
+        // debugger;
+        var bombM = new Explosion();
+        var bombR = new Explosion();
+        var bombB = new Explosion();
+        var bombL = new Explosion();
+        var bombT = new Explosion();
+
+        bombM.init(midX, midY);
+
+        bombR.init(rightX, rightY);
+
+        bombB.init(botX, botY);
+
+        bombL.init(leftX, leftY);
+
+        bombT.init(topX, topY);
+
+        that.htmlElement.appendChild(bombM.htmlElement);
+        that.explosions.push(bombM);
+        bombM.clearExplosion();
+
+        if (allowExplodeCreate(bombR)) {
+          that.htmlElement.appendChild(bombR.htmlElement);
+          that.explosions.push(bombR);
+          bombR.clearExplosion();
+        }
+        if (allowExplodeCreate(bombB)) {
+          that.htmlElement.appendChild(bombB.htmlElement);
+          that.explosions.push(bombB);
+          bombB.clearExplosion();
+        }
+        if (allowExplodeCreate(bombL)) {
+          that.htmlElement.appendChild(bombL.htmlElement);
+          that.explosions.push(bombL);
+          bombL.clearExplosion();
+        }
+        if (allowExplodeCreate(bombT)) {
+          that.htmlElement.appendChild(bombT.htmlElement);
+          that.explosions.push(bombT);
+          bombT.clearExplosion();
+        }
+        that.explosions = [];
       };
 
       window.onkeyup = function (event) {
@@ -217,6 +301,15 @@
         keyRestrict = 1;
       };
 
+    };
+
+    var allowExplodeCreate = function (explosion) {
+      for (var i = 0; i < that.blocks.length; i++) {
+        if (checkCollision(explosion, that.blocks[i]) && that.blocks[i].type !== 2) {
+          return false;
+        }
+      }
+      return true;
     };
 
     var checkCollision = function (object1, object2) {

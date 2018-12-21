@@ -84,3 +84,9 @@
 	background: url('../images/bomb.png');
 	z-index:1000;
 }
+.explosion{
+	position:absolute;
+	height:50px;
+	width:50px;
+	background:url('../images/explosion_sprite.png');
+}
