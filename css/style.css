@@ -49,6 +49,20 @@
 	height: 50px;
 	width: 50px;
 }
+.block1 {
+	background: url('../images/green.png');
+}
+.block2 {
+	background: url('../images/box.png');
+}
+.block3 {
+	background: url('../images/wall.png');
+	position: absolute;
+}
+.block4 {
+	background: url('../images/left-wall.png');
+	position: absolute;
+}
 .main-screen {
 	width: 550px;
 	height: 550px;
