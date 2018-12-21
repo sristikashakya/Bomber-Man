@@ -26,6 +26,24 @@
     }
   };
 
+  function Bomb() {
+    var that = this;
+
+    this.htmlElement = document.createElement('div');
+
+    this.x = 0;
+    this.y = 0;
+    this.bombActive = false;
+
+    this.init = function (x, y) {
+      that.x = x;
+      that.y = y;
+      that.htmlElement.className = 'bomb';
+      that.htmlElement.style.left = that.x + 'px';
+      that.htmlElement.style.top = that.y + 'px';
+    };
+  };
+
   function fadeOut(el) {
     el.style.opacity = 1;
 
@@ -120,9 +138,12 @@
     this.loadingScreen = document.getElementById('loading-screen');
     this.gameScreen = document.getElementById('game-screen');
     this.blocks = [];
+    this.bomb;
+
     this.bomberMan;
     this.mainGameLooper;
     var keyRestrict = 1;
+    var bombActive = false;
 
     var level1TileMapInfo = [
       [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3],
@@ -148,12 +169,12 @@
     };
 
     var initKeyEvents = function () {
-      // that.bomb = new Bomb();
+      that.bomb = new Bomb();
       var up = 38;
       var down = 40;
       var left = 37;
       var right = 39;
-      // var spaceBar = 32;
+      var spaceBar = 32;
 
       window.onkeydown = function (event) {
         if (event.which === right && keyRestrict > 0) {
@@ -174,16 +195,21 @@
           that.bomberMan.velocityY = -50;
           keyRestrict = 0;
         }
-        // if (event.which === spaceBar) {
-        //   if (bombLimit > 0 && !that.bomb.bombActive) {
-        //     that.bomb = new Bomb();
-        //     that.bomb.init(that.bomberMan.x, that.bomberMan.y);
-        //     that.htmlElement.appendChild(that.bomb.htmlElement);
-        //     setTimeout(explodeBomb, 4000);
-        //     that.bomb.bombActive = true;
-        //     bombLimit--;
-        //   }
-        // }
+        if (event.which === spaceBar) {
+          if (!that.bomb.bombActive) {
+            that.bomb = new Bomb();
+            that.bomb.init(that.bomberMan.x, that.bomberMan.y);
+            that.htmlElement.appendChild(that.bomb.htmlElement);
+            setTimeout(explodeBomb, 4000);
+            that.bomb.bombActive = true;
+          }
+        }
+      };
+
+      var explodeBomb = function () {
+        that.bomb.htmlElement.remove();
+        createExplosionBoxes(that.bomb.x, that.bomb.y);
+        that.bomb.bombActive = false;
       };
 
       window.onkeyup = function (event) {
