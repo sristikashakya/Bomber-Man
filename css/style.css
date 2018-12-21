@@ -37,3 +37,22 @@
   background-image: url('../images/stage1.png');
   background-repeat: no-repeat;
 }
+.game-screen{
+	width:550px;
+	height:600px;
+	clear:both;
+	display:none;
+	position:relative;
+}
+.block {
+	position: absolute;
+	height: 50px;
+	width: 50px;
+}
+.main-screen {
+	width: 550px;
+	height: 550px;
+	background: url('../images/bg.png') repeat;
+	position: relative;
+	float: left;
+}
