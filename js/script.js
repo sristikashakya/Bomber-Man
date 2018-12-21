@@ -291,6 +291,16 @@
           that.explosions.push(bombT);
           bombT.clearExplosion();
         }
+
+        for (var i = 0; i < that.explosions.length; i++) {
+          for (var j = 0; j < that.blocks.length; j++) {
+            if (checkCollision(that.explosions[i], that.blocks[j]) && that.blocks[j].type === 2) {
+              that.blocks[j].kill();
+              that.blocks[j] = null;
+            }
+        }
+        that.blocks = cleanNullFromArray(that.blocks);
+      }
         that.explosions = [];
       };
 
@@ -319,6 +329,15 @@
       } else {
         return false;
       }
+    };
+
+    var cleanNullFromArray = function (array) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i] === null) {
+          array.splice(i, 1);
+        }
+      }
+      return array;
     };
 
     var generateTileMap = function (tileMap) {
