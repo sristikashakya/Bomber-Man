@@ -145,6 +145,8 @@
 
     that.htmlElement = document.createElement('div');
     that.htmlElement.style.backgroundColor = 'black';
+    that.htmlElement.style.backgroundImage = 'url(images/gameOver.png)';
+    that.htmlElement.style.backgroundRepeat = 'no-repeat';
     this.init = function() {
       that.htmlElement.className = 'result1';
     }
