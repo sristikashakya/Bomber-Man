@@ -140,6 +140,16 @@
     }
   };
 
+  function Announcer(){
+    var that = this;
+
+    that.htmlElement = document.createElement('div');
+    that.htmlElement.style.backgroundColor = 'black';
+    this.init = function() {
+      that.htmlElement.className = 'result1';
+    }
+  };
+
   function animateTileSprite(element, noOfTiles, intervalTime) {
     var currentSpriteX = 0;
     var currentSpriteY = 0;
@@ -293,6 +303,15 @@
         }
 
         for (var i = 0; i < that.explosions.length; i++) {
+
+          if (checkCollision(that.bomberMan, that.explosions[i])) {
+            that.bomberMan.kill();
+            var announce4 = new Announcer();
+            announce4.init();
+            var selfEaten = that.htmlElement.appendChild(announce4.htmlElement);
+            fadeIn(selfEaten);
+          }
+
           for (var j = 0; j < that.blocks.length; j++) {
             if (checkCollision(that.explosions[i], that.blocks[j]) && that.blocks[j].type === 2) {
               that.blocks[j].kill();

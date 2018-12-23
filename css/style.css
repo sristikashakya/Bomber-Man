@@ -90,3 +90,12 @@
 	width:50px;
 	background:url('../images/explosion_sprite.png');
 }
+.result1{
+	position:absolute;
+	left:163px;
+	top:124px;
+	width:177px;
+	z-index:1005;
+	display:none;
+	height:53px;
+}
