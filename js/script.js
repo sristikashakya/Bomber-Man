@@ -597,17 +597,26 @@
     this.startButton = document.getElementById('start-game');
     this.loadingScreen = document.getElementById('loading-screen');
     this.gameScreen = document.getElementById('game-screen');
+
     this.endScreen = document.getElementById('end-screen');
     var endScreenButtons = document.getElementById('end-screen-buttons');
     this.endToGame = endScreenButtons.children[0];
+    this.result = document.getElementById('end-screen').children[0];
+    this.scoreBox = document.getElementById('end-screen').children[1];
+
+    var scorebar = document.getElementById('score-bar');
+    this.scoreBoard = scorebar.children[0];
+    this.scoreDiv = scorebar.children[1];
 
     this.blocks = [];
     this.explosions = [];
+    this.score = 0;
     this.bomb;
     this.bomberMan;
     this.enemies = [];
     this.mainGameLooper;
     var keyRestrict = 1;
+    this.scoreDiv.innerHTML = this.score;
 
     var level1TileMapInfo = [
       [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3],
@@ -751,8 +760,20 @@
             if (checkCollision(that.explosions[i], that.enemies[e])) {
               that.enemies[e].kill();
               that.enemies[e] = null;
+              var v = setInterval(function () {
+                that.scoreDiv.style.color = '#8e44ad';
+                that.scoreDiv.style.fontSize = 20 + 'px';
+              }, 15);
+              setTimeout(function () {
+                clearInterval(v);
+                that.scoreDiv.style.color = '#2980b9';
+                that.scoreDiv.style.fontSize = 18 + 'px';
+              }, 1000);
+              updateScore();
+              checkEnemies();
             }
           }
+          that.enemies = cleanNullFromArray(that.enemies);
 
           if (checkCollision(that.bomberMan, that.explosions[i])) {
             that.bomberMan.kill();
@@ -761,7 +782,7 @@
             var selfEaten = that.htmlElement.appendChild(announce4.htmlElement);
             fadeIn(selfEaten);
             setTimeout(function () {
-              displayEndScreen();
+              displayEndScreen(2);
               fadeOut(selfEaten);
             }, 1000);
           }
@@ -801,6 +822,12 @@
       return path;
     };
 
+    var checkEnemies = function () {
+      if (that.enemies.length === 0) {
+        displayEndScreen(1);
+      }
+    };
+
     var checkCollision = function (object1, object2) {
       if ((object1.x + 45) > object2.x && object1.x < (object2.x + 45) &&
       (object1.y + 45) > object2.y && object1.y < (object2.y + 45)) {
@@ -809,6 +836,11 @@
         return false;
       }
     };
+
+    var updateScore = function (){
+      that.score += 30;
+      that.scoreDiv.innerHTML = that.score;
+    }
 
     var cleanNullFromArray = function (array) {
       for (var i = 0; i < array.length; i++) {
@@ -819,13 +851,19 @@
       return array;
     };
 
-    var displayEndScreen = function () {
+    var displayEndScreen = function (type) {
       clearInterval(that.mainGameLooper);
       setTimeout(function () {
-        console.log('game over');
         fadeOut(that.gameScreen);
         fadeIn(that.endScreen);
       }, 1000)
+      if (type === 1) {
+        that.result.style.background = 'url(images/you-win.png)';
+      }
+      if (type === 2) {
+        that.result.style.background = 'url(images/game-over.png)';
+      }
+      that.scoreBox.innerHTML = that.score;
     };
 
     var generateTileMap = function (tileMap) {
@@ -881,15 +919,12 @@
           var gotEaten = that.htmlElement.appendChild(announce5.htmlElement);
           fadeIn(gotEaten);
           setTimeout(function () {
-            displayEndScreen();
+            displayEndScreen(2);
             fadeOut(gotEaten);
           }, 1000);
         }
-      }
-      ;
-
+      };
     }
-
     var initClickEvents = function(){
 
       that.startButton.onclick = function(){
