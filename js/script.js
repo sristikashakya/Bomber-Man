@@ -634,6 +634,16 @@
       that.htmlElement.appendChild(enemy.htmlElement);
       that.enemies.push(enemy);
 
+      enemy = new Enemy(9, 1, 5);
+      enemy.init([9, 1], [1, 4]);
+      that.htmlElement.appendChild(enemy.htmlElement);
+      that.enemies.push(enemy);
+
+      enemy = new Enemy(5, 5, 5);
+      enemy.init([5, 5], [5, 5]);
+      that.htmlElement.appendChild(enemy.htmlElement);
+      that.enemies.push(enemy);
+
       initKeyEvents();
       this.mainGameLooper = setInterval(mainGameLoop, 100);
     };
@@ -737,6 +747,12 @@
         }
 
         for (var i = 0; i < that.explosions.length; i++) {
+          for (var e = 0; e < that.enemies.length; e++) {
+            if (checkCollision(that.explosions[i], that.enemies[e])) {
+              that.enemies[e].kill();
+              that.enemies[e] = null;
+            }
+          }
 
           if (checkCollision(that.bomberMan, that.explosions[i])) {
             that.bomberMan.kill();
